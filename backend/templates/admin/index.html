@@ -1,0 +1,592 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link
+    rel="stylesheet"
+    href="{% static 'admin/css/dashboard.css' %}"
+  >
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}
+  {{ block.super }} dashboard
+{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+  <svg hidden aria-hidden="true">
+    <symbol
+      id="hc-icon-users"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="9" cy="8" r="3"></circle>
+      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path>
+      <circle cx="17" cy="9" r="2.5"></circle>
+      <path d="M15.5 14c2.6.3 4.5 2.4 4.5 5"></path>
+    </symbol>
+
+    <symbol
+      id="hc-icon-beneficiaries"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        d="M12 20s-7-4.5-9-9c-1.4-3 .8-6 3.8-6
+           2 0 3.4 1.2 4.2 2.4C11.8 5.2 13.2 4
+           15.2 4c3 0 5.2 3 3.8 6-2 4.5-7 9-7 9z"
+      ></path>
+    </symbol>
+
+    <symbol
+      id="hc-icon-staff"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="4" y="4" width="16" height="16" rx="3"></rect>
+      <circle cx="12" cy="10" r="2.5"></circle>
+      <path d="M7 18c0-2.5 2.2-4 5-4s5 1.5 5 4"></path>
+    </symbol>
+
+    <symbol
+      id="hc-icon-clock"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="8.5"></circle>
+      <path d="M12 7.5V12l3.2 2"></path>
+    </symbol>
+
+    <symbol
+      id="hc-icon-alert"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M12 4 21 19H3z"></path>
+      <path d="M12 10v4"></path>
+      <circle
+        cx="12"
+        cy="17"
+        r="0.6"
+        fill="currentColor"
+        stroke="none"
+      ></circle>
+    </symbol>
+
+    <symbol
+      id="hc-icon-check"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="8.5"></circle>
+      <path d="M8.5 12.5l2.3 2.3 4.7-5.1"></path>
+    </symbol>
+
+    <symbol
+      id="hc-icon-article"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="5" y="3.5" width="14" height="17" rx="2"></rect>
+      <path d="M8 8h8M8 12h8M8 16h5"></path>
+    </symbol>
+
+    <symbol
+      id="hc-icon-bell"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        d="M6 10.5a6 6 0 0 1 12 0
+           c0 4 1.5 5.5 1.5 5.5H4.5
+           S6 14.5 6 10.5z"
+      ></path>
+      <path d="M10 19a2 2 0 0 0 4 0"></path>
+    </symbol>
+  </svg>
+
+  <div class="hc-dashboard">
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "Overview" %}</h2>
+
+      <div class="hc-stat-grid">
+        {% for card in dashboard_stat_cards %}
+          {% if card.group == 'overview' %}
+            <a
+              href="{{ card.url }}"
+              class="hc-stat-card tone-{{ card.tone }}"
+              aria-label="{{ card.label }}: {{ card.value }}"
+            >
+              <span class="hc-stat-icon" aria-hidden="true">
+                <svg>
+                  <use href="#hc-icon-{{ card.icon }}"></use>
+                </svg>
+              </span>
+
+              <span>
+                <span class="hc-stat-value">
+                  {{ card.value }}
+                </span>
+
+                <span class="hc-stat-label">
+                  {{ card.label }}
+                </span>
+              </span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "People & access" %}</h2>
+
+      <div class="hc-stat-grid">
+        {% for card in dashboard_stat_cards %}
+          {% if card.group == 'people' %}
+            <a
+              href="{{ card.url }}"
+              class="hc-stat-card tone-{{ card.tone }}"
+              aria-label="{{ card.label }}: {{ card.value }}"
+            >
+              <span class="hc-stat-icon" aria-hidden="true">
+                <svg>
+                  <use href="#hc-icon-{{ card.icon }}"></use>
+                </svg>
+              </span>
+
+              <span>
+                <span class="hc-stat-value">
+                  {{ card.value }}
+                </span>
+
+                <span class="hc-stat-label">
+                  {{ card.label }}
+                </span>
+              </span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "Aid operations" %}</h2>
+
+      <div class="hc-stat-grid">
+        {% for card in dashboard_stat_cards %}
+          {% if card.group == 'aid' %}
+            <a
+              href="{{ card.url }}"
+              class="hc-stat-card tone-{{ card.tone }}"
+              aria-label="{{ card.label }}: {{ card.value }}"
+            >
+              <span class="hc-stat-icon" aria-hidden="true">
+                <svg>
+                  <use href="#hc-icon-{{ card.icon }}"></use>
+                </svg>
+              </span>
+
+              <span>
+                <span class="hc-stat-value">
+                  {{ card.value }}
+                </span>
+
+                <span class="hc-stat-label">
+                  {{ card.label }}
+                </span>
+              </span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "Support & content" %}</h2>
+
+      <div class="hc-stat-grid">
+        {% for card in dashboard_stat_cards %}
+          {% if card.group == 'engagement' %}
+            <a
+              href="{{ card.url }}"
+              class="hc-stat-card tone-{{ card.tone }}"
+              aria-label="{{ card.label }}: {{ card.value }}"
+            >
+              <span class="hc-stat-icon" aria-hidden="true">
+                <svg>
+                  <use href="#hc-icon-{{ card.icon }}"></use>
+                </svg>
+              </span>
+
+              <span>
+                <span class="hc-stat-value">
+                  {{ card.value }}
+                </span>
+
+                <span class="hc-stat-label">
+                  {{ card.label }}
+                </span>
+              </span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "Distribution" %}</h2>
+
+      <div class="hc-stat-grid">
+
+        <div class="hc-distribution">
+          <h3>{% translate "Users by role" %}</h3>
+
+          {% if dashboard_role_distribution %}
+            {% for row in dashboard_role_distribution %}
+              <div class="hc-distribution-row">
+                <span class="hc-distribution-label">
+                  {{ row.label }}
+                </span>
+
+                <span
+                  class="hc-distribution-track"
+                  role="progressbar"
+                  aria-label="{{ row.label }}: {{ row.value }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="{{ row.percent }}"
+                >
+                  <span
+                    class="hc-distribution-fill"
+                    style="width: {{ row.percent }}%;"
+                  ></span>
+                </span>
+
+                <span class="hc-distribution-value">
+                  {{ row.value }}
+                </span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="hc-empty-state">
+              {% translate "No users yet." %}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="hc-distribution">
+          <h3>{% translate "Aid schedules by status" %}</h3>
+
+          {% if dashboard_aid_status_distribution %}
+            {% for row in dashboard_aid_status_distribution %}
+              <div class="hc-distribution-row">
+                <span class="hc-distribution-label">
+                  {{ row.label }}
+                </span>
+
+                <span
+                  class="hc-distribution-track"
+                  role="progressbar"
+                  aria-label="{{ row.label }}: {{ row.value }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="{{ row.percent }}"
+                >
+                  <span
+                    class="hc-distribution-fill"
+                    style="width: {{ row.percent }}%;"
+                  ></span>
+                </span>
+
+                <span class="hc-distribution-value">
+                  {{ row.value }}
+                </span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="hc-empty-state">
+              {% translate "No aid schedules yet." %}
+            </p>
+          {% endif %}
+        </div>
+
+      </div>
+    </section>
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "Recent activity" %}</h2>
+
+      <div class="hc-stat-grid">
+
+        <div class="hc-recent-list">
+          <h3 class="hc-panel-title">
+            {% translate "Recent beneficiaries" %}
+          </h3>
+
+          {% if dashboard_recent_beneficiaries %}
+            {% for row in dashboard_recent_beneficiaries %}
+              <a href="{{ row.url }}" class="hc-recent-row">
+                <span class="hc-recent-person">
+                  <span class="hc-recent-avatar">
+                    {% if row.photo_url %}
+                      <img
+                        src="{{ row.photo_url }}"
+                        alt="{{ row.photo_alt }}"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      <span aria-hidden="true">
+                        {{ row.initials }}
+                      </span>
+                    {% endif %}
+                  </span>
+
+                  <span class="hc-recent-content">
+                    <span class="hc-recent-title">
+                      {{ row.title }}
+                    </span>
+
+                    <span class="hc-recent-subtitle">
+                      {{ row.subtitle }}
+                    </span>
+                  </span>
+                </span>
+
+                <span class="hc-recent-meta">
+                  {{ row.date|date:"M j, Y" }}
+                </span>
+              </a>
+            {% endfor %}
+          {% else %}
+            <p class="hc-empty-state">
+              {% translate "No beneficiaries registered yet." %}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="hc-recent-list">
+          <h3 class="hc-panel-title">
+            {% translate "Recent aid schedules" %}
+          </h3>
+
+          {% if dashboard_recent_aid_schedules %}
+            {% for row in dashboard_recent_aid_schedules %}
+              <a href="{{ row.url }}" class="hc-recent-row">
+                <span class="hc-recent-person">
+                  <span class="hc-recent-avatar">
+                    {% if row.photo_url %}
+                      <img
+                        src="{{ row.photo_url }}"
+                        alt="{{ row.photo_alt }}"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      <span aria-hidden="true">
+                        {{ row.initials }}
+                      </span>
+                    {% endif %}
+                  </span>
+
+                  <span class="hc-recent-content">
+                    <span class="hc-recent-title">
+                      {{ row.title }}
+                    </span>
+
+                    <span
+                      class="hc-badge hc-badge-{{ row.status }}"
+                    >
+                      {{ row.subtitle }}
+                    </span>
+                  </span>
+                </span>
+
+                <span class="hc-recent-meta">
+                  {{ row.date|date:"M j, Y, P" }}
+                </span>
+              </a>
+            {% endfor %}
+          {% else %}
+            <p class="hc-empty-state">
+              {% translate "No aid schedules yet." %}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="hc-recent-list">
+          <h3 class="hc-panel-title">
+            {% translate "Recent complaints" %}
+          </h3>
+
+          {% if dashboard_recent_complaints %}
+            {% for row in dashboard_recent_complaints %}
+              <a href="{{ row.url }}" class="hc-recent-row">
+                <span class="hc-recent-person">
+                  <span
+                    class="hc-recent-avatar"
+                    aria-hidden="true"
+                  >
+                    {{ row.initials }}
+                  </span>
+
+                  <span class="hc-recent-content">
+                    <span class="hc-recent-title">
+                      {{ row.title }}
+                    </span>
+
+                    <span class="hc-recent-subtitle">
+                      {{ row.subtitle }}
+                    </span>
+
+                    <span
+                      class="hc-badge hc-badge-{{ row.status }}"
+                    >
+                      {{ row.status|capfirst }}
+                    </span>
+                  </span>
+                </span>
+
+                <span class="hc-recent-meta">
+                  {{ row.date|date:"M j, Y, P" }}
+                </span>
+              </a>
+            {% endfor %}
+          {% else %}
+            <p class="hc-empty-state">
+              {% translate "No complaints yet." %}
+            </p>
+          {% endif %}
+        </div>
+
+      </div>
+    </section>
+
+    <section class="hc-dashboard-section">
+      <h2>{% translate "Quick links" %}</h2>
+
+      <div class="hc-quick-links">
+        {% for group in dashboard_quick_links %}
+          <div class="hc-quick-links-group">
+            <h3>{{ group.section }}</h3>
+
+            {% for link in group.links %}
+              <a href="{{ link.url }}">
+                {{ link.label }}
+              </a>
+            {% endfor %}
+          </div>
+        {% empty %}
+          <p class="hc-empty-state">
+            {% translate "No quick links available." %}
+          </p>
+        {% endfor %}
+      </div>
+    </section>
+
+  </div>
+
+  <section class="hc-dashboard-section">
+    <h2>{% translate "All apps & models" %}</h2>
+
+    <div id="content-main" class="app-list">
+      {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block sidebar %}
+  <div id="content-related">
+    <div class="module" id="recent-actions-module">
+      <h2>{% translate "Recent actions" %}</h2>
+      <h3>{% translate "My actions" %}</h3>
+
+      {% load log %}
+      {% get_admin_log 10 as admin_log for_user user %}
+
+      {% if not admin_log %}
+        <p>{% translate "None available" %}</p>
+      {% else %}
+        <ul class="actionlist">
+          {% for entry in admin_log %}
+            <li class="
+              {% if entry.is_addition %}addlink{% endif %}
+              {% if entry.is_change %}changelink{% endif %}
+              {% if entry.is_deletion %}deletelink{% endif %}
+            ">
+              <span class="visually-hidden">
+                {% if entry.is_addition %}
+                  {% translate "Added:" %}
+                {% elif entry.is_change %}
+                  {% translate "Changed:" %}
+                {% elif entry.is_deletion %}
+                  {% translate "Deleted:" %}
+                {% endif %}
+              </span>
+
+              {% if entry.is_deletion or not entry.get_admin_url %}
+                {{ entry.object_repr }}
+              {% else %}
+                <a href="{{ entry.get_admin_url }}">
+                  {{ entry.object_repr }}
+                </a>
+              {% endif %}
+
+              <br>
+
+              {% if entry.content_type %}
+                <span class="mini quiet">
+                  {% filter capfirst %}
+                    {{ entry.content_type.name }}
+                  {% endfilter %}
+                </span>
+              {% else %}
+                <span class="mini quiet">
+                  {% translate "Unknown content" %}
+                </span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

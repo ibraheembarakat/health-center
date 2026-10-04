@@ -1,0 +1,34 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Secrets and local database
+.env
+.env.*
+!.env.example
+db.sqlite3
+*.log
+
+# Editors and caches
+.vscode/
+.idea/
+.ruff_cache/
+
+# Generated and uploaded files
+/staticfiles/
+/media/
+
+# Local test scripts
+/test_*.py
+/aid_api_smoke_check.py
+/Health_Center_Aid_Flow.postman_collection.json
+
+# Personal images and archives in project root
+/*.jpg
+/*.jpeg
+/*.png
+/*.rar
+/*.zip
+/aid_api_smoke_check.py
